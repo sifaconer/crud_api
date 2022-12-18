@@ -1,0 +1,13 @@
+version: '3'
+
+env:
+  ENV: '.'
+
+dotenv: [".env"]
+
+tasks:
+  run:
+    dir: './cmd'
+    cmds:
+      - go run main.go {{.CLI_ARGS}}
+    silent: true
