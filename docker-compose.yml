@@ -6,7 +6,7 @@ services:
     image: postgres:alpine
     restart: unless-stopped
     env_file:
-      - dev.env
+      - .env
     ports:
       - '5432:5432'
     networks:
@@ -19,7 +19,7 @@ services:
     image: redis:alpine
     restart: unless-stopped
     env_file:
-      - dev.env
+      - .env
     ports:
       - '6379:6379'
     depends_on:
@@ -27,6 +27,32 @@ services:
     networks:
       - api_network
 
+  api:
+    container_name: api_server
+    restart: unless-stopped
+    build: .
+    image: api_server:v1
+    command: server grpc
+    env_file:
+      - .env
+    ports:
+      - '8998:${SERVER_PORT}'
+    depends_on:
+      - db-pg
+      - db-redis
+    networks:
+      - api_network
+
+  migrations:
+    image: api_server:v1
+    env_file:
+      - .env
+    command: db migrate
+    depends_on:
+      - api
+      - db-pg
+    networks:
+      - api_network
 
 networks:
   api_network:

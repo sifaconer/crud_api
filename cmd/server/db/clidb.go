@@ -17,9 +17,12 @@ type cliGorm struct {
 
 func registerModels(db *gorm.DB) error {
 	return db.AutoMigrate(
-		&entity.Fabricante{},
-		&entity.Serial{},
-		&entity.Predio{},
+		&entity.Medidor{},
+	)
+}
+
+func removeModels(db *gorm.DB) error {
+	return db.Migrator().DropTable(
 		&entity.Medidor{},
 	)
 }
@@ -56,7 +59,19 @@ func (cg *cliGorm) Commands() *cli.Command {
 					if err != nil {
 						log.Fatalf("[ERROR]: MIGRATIONS -> %s", err.Error())
 					}
-					fmt.Println("migrated finish")
+					log.Fatalf("[INFO]: MIGRATIONS -> %s", "migrated finish")
+					return nil
+				},
+			},
+			{
+				Name:  "drop",
+				Usage: "drop all tables in database",
+				Action: func(c *cli.Context) error {
+					err := removeModels(cg.db)
+					if err != nil {
+						log.Fatalf("[ERROR]: %s", err.Error())
+					}
+					fmt.Println("drop finish")
 					return nil
 				},
 			},

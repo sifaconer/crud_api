@@ -8,14 +8,12 @@ import (
 
 type Medidor struct {
 	ID               uuid.UUID `gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
-	Brand            string
-	PredioID         uuid.UUID
-	Predio           Predio `gorm:"foreignKey:PredioID"`
-	InstallationDate time.Time
+	Brand            string    `gorm:"not null"`
+	Address          string    `gorm:"not null"`
+	InstallationDate time.Time `gorm:"not null"`
 	RetirementDate   *time.Time
-	SerialID         uuid.UUID
-	Serial           Serial `gorm:"foreignKey:SerialID"`
-	Lines            uint8  `gorm:"check:lines <= 10"` //Int (valores permitidos: 0 a 10)	False	Número de líneas conectadas, puede ir de 1 a 10
-	IsActive         bool
-	CreatedAt        time.Time
+	Serial           string    `gorm:"not null"`
+	Lines            uint32    `gorm:"not null;check:lines <= 10"`
+	IsActive         bool      `gorm:"not null"`
+	CreatedAt        time.Time `gorm:"not null;default:now()"`
 }

@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/sifaconer/crud_api/cmd/server/cligrpc"
 	"github.com/sifaconer/crud_api/cmd/server/db"
 	"github.com/urfave/cli/v2"
 )
@@ -14,6 +15,7 @@ func main() {
 		Usage: "Cli to interact app",
 		Commands: []*cli.Command{
 			db.NewCliGorm().Commands(),
+			cligrpc.NewCliGRPC().Commands(),
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
@@ -31,7 +33,7 @@ func init() {
 	REDIS_HOST := os.Getenv("REDIS_HOST")
 	REDIS_PORT := os.Getenv("REDIS_PORT")
 	REDIS_PASSWORD := os.Getenv("REDIS_PASSWORD")
-	REDIS_DISABLE_COMMANDS := os.Getenv("REDIS_DISABLE_COMMANDS")
+	SERVER_PORT := os.Getenv("SERVER_PORT")
 	valid := func(name, content string) {
 		if len(content) == 0 {
 			log.Fatalf("[ERROR]: environment %s is empty\n", name)
@@ -47,5 +49,5 @@ func init() {
 	valid("REDIS_HOST", REDIS_HOST)
 	valid("REDIS_PORT", REDIS_PORT)
 	valid("REDIS_PASSWORD", REDIS_PASSWORD)
-	valid("REDIS_DISABLE_COMMANDS", REDIS_DISABLE_COMMANDS)
+	valid("SERVER_PORT", SERVER_PORT)
 }
